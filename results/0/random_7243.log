@@ -1,0 +1,584 @@
+logs for node: 1
+
+----- Stdout -----
+3200310:C 17 Oct 2023 16:33:07.007 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+3200310:C 17 Oct 2023 16:33:07.007 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+3200310:C 17 Oct 2023 16:33:07.007 * Redis version=255.255.255, bits=64, commit=e04ebdb8, modified=1, pid=3200310, just started
+3200310:C 17 Oct 2023 16:33:07.007 * Configuration loaded
+3200310:M 17 Oct 2023 16:33:07.007 * monotonic clock: POSIX clock_gettime
+3200310:M 17 Oct 2023 16:33:07.008 * Running mode=standalone, port=5011.
+3200310:M 17 Oct 2023 16:33:07.012 * <raft> RedisRaft version 255.255.255 [c259f3d2]
+3200310:M 17 Oct 2023 16:33:07.016 * <raft> Initializing test network
+3200310:M 17 Oct 2023 16:33:07.017 * <raft> Created test network client
+3200310:M 17 Oct 2023 16:33:07.020 * <raft> Raft module loaded, state is 'loading'
+3200310:M 17 Oct 2023 16:33:07.020 * Module 'raft' loaded from /home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so
+3200310:M 17 Oct 2023 16:33:07.021 * Server initialized
+3200310:M 17 Oct 2023 16:33:07.021 . The AOF directory appendonlydir doesn't exist
+3200310:M 17 Oct 2023 16:33:07.021 * Ready to accept connections tcp
+3200310:M 17 Oct 2023 16:33:07.021 . 0 clients connected (0 replicas), 1746624 bytes in use
+3200310:M 17 Oct 2023 16:33:07.067 - Accepted 127.0.0.1:47952
+3200310:M 17 Oct 2023 16:33:07.067 # Missing implement of connection type tls
+3200310:M 17 Oct 2023 16:33:07.121 * <raft> Loading: Redis loading complete, snapshot NOT LOADED
+3200310:M 17 Oct 2023 16:33:07.122 * <raft> Cluster Membership: term:0 index:0 nodes: id=1,voting=0,active=1,addr=-
+3200310:M 17 Oct 2023 16:33:07.122 * <raft> Test network starting message polling thread
+
+
+=== REDIS BUG REPORT START: Cut & paste starting from here ===
+3200310:M 17 Oct 2023 16:33:07.122 # Redis 255.255.255 crashed by signal: 11, si_code: 1
+3200310:M 17 Oct 2023 16:33:07.122 # Accessing address: 0x33c
+3200310:M 17 Oct 2023 16:33:07.122 # Crashed running the instruction at: 0x7faf85a7ed41
+
+------ STACK TRACE ------
+EIP:
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(ConnCreate+0xb1)[0x7faf85a7ed41]
+
+Backtrace:
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x13140)[0x7faf85cd0140]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(ConnCreate+0xb1)[0x7faf85a7ed41]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(NodeCreate+0x9c)[0x7faf85a846fc]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raftNotifyMembershipEvent+0xf7)[0x7faf85a87877]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raft_add_node_internal+0x13a)[0x7faf85a9621a]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raft_handle_append_cfg_change+0x24b)[0x7faf85a979fb]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raft_restore_log+0xb2)[0x7faf85a9bb52]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(callRaftPeriodic+0x131)[0x7faf85a87e71]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5011(moduleTimerHandler+0x21c)[0x5567f1b0298c]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5011(+0x81705)[0x5567f1a0c705]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5011(aeMain+0x1c8)[0x5567f1a16cb8]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5011(main+0x3cd)[0x5567f1a0be2d]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xea)[0x7faf85b0cd0a]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5011(_start+0x2a)[0x5567f1a0c5aa]
+
+------ REGISTERS ------
+3200310:M 17 Oct 2023 16:33:07.123 # 
+RAX:00007faf83d12f30 RBX:0000000000000000
+RCX:0000000000000000 RDX:0000000000000001
+RDI:00007faf83d12f30 RSI:00007faf83d12f80
+RBP:00007faf83d767c0 RSP:00007ffd3808a750
+R8 :00007faf85600338 R9 :0000000000000000
+R10:00000000013d3f50 R11:00007faf85ae8680
+R12:00007faf83d76600 R13:00007faf83d12f80
+R14:00007faf83d12f88 R15:00007faf85a84480
+RIP:00007faf85a7ed41 EFL:0000000000010202
+CSGSFS:002b000000000033
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a75f) -> 00007faf85a87877
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a75e) -> 00007faf85adff00
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a75d) -> 00007faf8562a780
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a75c) -> 0000000000000000
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a75b) -> 00007faf83d76a00
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a75a) -> 00007faf83d52e40
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a759) -> 00007faf85a846fc
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a758) -> 0000000000000002
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a757) -> 00007faf8575e340
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a756) -> 0000000000000002
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a755) -> 00007faf8575e200
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a754) -> 00007faf83d52e78
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a753) -> 00007faf85adff00
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a752) -> 0000000000000002
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a751) -> 00007faf8575e200
+3200310:M 17 Oct 2023 16:33:07.123 # (00007ffd3808a750) -> 0000000000000150
+
+------ INFO OUTPUT ------
+
+----- Stderr -----
+
+
+
+
+logs for node: 2
+
+----- Stdout -----
+3200410:C 17 Oct 2023 16:33:07.160 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+3200410:C 17 Oct 2023 16:33:07.160 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+3200410:C 17 Oct 2023 16:33:07.160 * Redis version=255.255.255, bits=64, commit=e04ebdb8, modified=1, pid=3200410, just started
+3200410:C 17 Oct 2023 16:33:07.160 * Configuration loaded
+3200410:M 17 Oct 2023 16:33:07.160 * monotonic clock: POSIX clock_gettime
+3200410:M 17 Oct 2023 16:33:07.161 * Running mode=standalone, port=5012.
+3200410:M 17 Oct 2023 16:33:07.165 * <raft> RedisRaft version 255.255.255 [c259f3d2]
+3200410:M 17 Oct 2023 16:33:07.169 * <raft> Initializing test network
+3200410:M 17 Oct 2023 16:33:07.170 * <raft> Created test network client
+3200410:M 17 Oct 2023 16:33:07.174 * <raft> Raft module loaded, state is 'loading'
+3200410:M 17 Oct 2023 16:33:07.174 * Module 'raft' loaded from /home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so
+3200410:M 17 Oct 2023 16:33:07.175 * Server initialized
+3200410:M 17 Oct 2023 16:33:07.175 . The AOF directory appendonlydir doesn't exist
+3200410:M 17 Oct 2023 16:33:07.175 * Ready to accept connections tcp
+3200410:M 17 Oct 2023 16:33:07.175 . 0 clients connected (0 replicas), 1746688 bytes in use
+
+----- Stderr -----
+
+
+
+
+logs for node: 3
+
+----- Stdout -----
+3200108:C 17 Oct 2023 16:33:06.821 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+3200108:C 17 Oct 2023 16:33:06.821 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+3200108:C 17 Oct 2023 16:33:06.821 * Redis version=255.255.255, bits=64, commit=e04ebdb8, modified=1, pid=3200108, just started
+3200108:C 17 Oct 2023 16:33:06.821 * Configuration loaded
+3200108:M 17 Oct 2023 16:33:06.821 * monotonic clock: POSIX clock_gettime
+3200108:M 17 Oct 2023 16:33:06.822 * Running mode=standalone, port=5013.
+3200108:M 17 Oct 2023 16:33:06.826 * <raft> RedisRaft version 255.255.255 [c259f3d2]
+3200108:M 17 Oct 2023 16:33:06.830 * <raft> Initializing test network
+3200108:M 17 Oct 2023 16:33:06.830 * <raft> Created test network client
+3200108:M 17 Oct 2023 16:33:06.833 * <raft> Raft module loaded, state is 'loading'
+3200108:M 17 Oct 2023 16:33:06.833 * Module 'raft' loaded from /home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so
+3200108:M 17 Oct 2023 16:33:06.834 * Server initialized
+3200108:M 17 Oct 2023 16:33:06.834 . The AOF directory appendonlydir doesn't exist
+3200108:M 17 Oct 2023 16:33:06.834 * Ready to accept connections tcp
+3200108:M 17 Oct 2023 16:33:06.834 . 0 clients connected (0 replicas), 1746720 bytes in use
+3200108:M 17 Oct 2023 16:33:06.861 - Accepted 127.0.0.1:46066
+3200108:M 17 Oct 2023 16:33:06.861 # Missing implement of connection type tls
+3200108:M 17 Oct 2023 16:33:06.933 * <raft> Loading: Redis loading complete, snapshot NOT LOADED
+3200108:M 17 Oct 2023 16:33:06.934 * <raft> Cluster Membership: term:0 index:0 nodes: id=3,voting=0,active=1,addr=-
+3200108:M 17 Oct 2023 16:33:06.934 * <raft> Test network starting message polling thread
+
+
+=== REDIS BUG REPORT START: Cut & paste starting from here ===
+3200108:M 17 Oct 2023 16:33:06.934 # Redis 255.255.255 crashed by signal: 6, si_code: -6
+3200108:M 17 Oct 2023 16:33:06.934 # Crashed running the instruction at: 0x7f8e10fcdce1
+
+------ STACK TRACE ------
+EIP:
+/lib/x86_64-linux-gnu/libc.so.6(gsignal+0x141)[0x7f8e10fcdce1]
+
+Backtrace:
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x13140)[0x7f8e1117c140]
+/lib/x86_64-linux-gnu/libc.so.6(gsignal+0x141)[0x7f8e10fcdce1]
+/lib/x86_64-linux-gnu/libc.so.6(abort+0x123)[0x7f8e10fb7537]
+/lib/x86_64-linux-gnu/libc.so.6(+0x2240f)[0x7f8e10fb740f]
+/lib/x86_64-linux-gnu/libc.so.6(+0x31662)[0x7f8e10fc6662]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(+0x3cc2a)[0x7f8e10f43c2a]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(callRaftPeriodic+0x477)[0x7f8e10f341b7]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(moduleTimerHandler+0x21c)[0x55766d66898c]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(+0x81705)[0x55766d572705]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(aeMain+0x1c8)[0x55766d57ccb8]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(main+0x3cd)[0x55766d571e2d]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xea)[0x7f8e10fb8d0a]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(_start+0x2a)[0x55766d5725aa]
+
+------ REGISTERS ------
+3200108:M 17 Oct 2023 16:33:06.935 # 
+RAX:0000000000000000 RBX:00007f8e10f94680
+RCX:00007f8e10fcdce1 RDX:0000000000000000
+RDI:0000000000000002 RSI:00007ffd44333a10
+RBP:00007f8e1112e688 RSP:00007ffd44333a10
+R8 :0000000000000000 R9 :00007ffd44333a10
+R10:0000000000000008 R11:0000000000000246
+R12:00007f8e10f6f6e0 R13:00000000000006a6
+R14:00007f8e10f7001c R15:0000000000000000
+RIP:00007f8e10fcdce1 EFL:0000000000000246
+CSGSFS:002b000000000033
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a1f) -> 0000000000000000
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a1e) -> 0000000000000000
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a1d) -> 0000000000000000
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a1c) -> 0000000000000000
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a1b) -> 0000000000000000
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a1a) -> 000055766dca0adc
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a19) -> 000055766dca09b0
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a18) -> 000055766dca0adc
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a17) -> 000055766dca0a55
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a16) -> 000055766dca09b0
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a15) -> 000055766dca09b0
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a14) -> 000055766dca0a15
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a13) -> 000055766dca09b0
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a12) -> 00007f8efbad8000
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a11) -> 00007f8e1100e2ac
+3200108:M 17 Oct 2023 16:33:06.935 # (00007ffd44333a10) -> 0000000000000000
+
+------ INFO OUTPUT ------
+# Server
+redis_version:255.255.255
+redis_git_sha1:e04ebdb8
+redis_git_dirty:1
+redis_build_id:1f78dcc7b4fbdd25
+redis_mode:standalone
+os:Linux 5.15.111.1.amd64-smp x86_64
+arch_bits:64
+monotonic_clock:POSIX clock_gettime
+multiplexing_api:epoll
+atomicvar_api:c11-builtin
+gcc_version:10.2.1
+process_id:3200108
+process_supervised:no
+run_id:6a6625b26b5f9a07d7cbc4540fdea844521c9936
+tcp_port:5013
+server_time_usec:1697553186933460
+uptime_in_seconds:0
+uptime_in_days:0
+hz:10
+configured_hz:10
+lru_clock:3054370
+executable:/home/snagendra/Fuzzing/redis/src/redis-server
+config_file:
+io_threads_active:0
+listener0:name=tcp,bind=0.0.0.0,port=5013
+
+# Clients
+connected_clients:1
+cluster_connections:0
+maxclients:10000
+client_recent_max_input_buffer:0
+client_recent_max_output_buffer:0
+blocked_clients:0
+tracking_clients:0
+clients_in_timeout_table:0
+total_blocking_keys:0
+total_blocking_keys_on_nokey:0
+
+# Memory
+used_memory:1816936
+used_memory_human:1.73M
+used_memory_rss:15429632
+used_memory_rss_human:14.71M
+used_memory_peak:1816936
+used_memory_peak_human:1.73M
+used_memory_peak_perc:100.39%
+used_memory_overhead:1746760
+used_memory_startup:1746576
+used_memory_dataset:70176
+used_memory_dataset_perc:99.74%
+allocator_allocated:2157184
+allocator_active:2703360
+allocator_resident:10887168
+total_system_memory:270386737152
+total_system_memory_human:251.82G
+used_memory_lua:31744
+used_memory_vm_eval:31744
+used_memory_lua_human:31.00K
+used_memory_scripts_eval:0
+number_of_cached_scripts:0
+number_of_functions:0
+number_of_libraries:0
+used_memory_vm_functions:32768
+used_memory_vm_total:64512
+used_memory_vm_total_human:63.00K
+used_memory_functions:184
+used_memory_scripts:184
+used_memory_scripts_human:184B
+maxmemory:0
+maxmemory_human:0B
+maxmemory_policy:noeviction
+allocator_frag_ratio:1.25
+allocator_frag_bytes:546176
+allocator_rss_ratio:4.03
+allocator_rss_bytes:8183808
+rss_overhead_ratio:1.42
+rss_overhead_bytes:4542464
+mem_fragmentation_ratio:8.83
+mem_fragmentation_bytes:13682912
+mem_not_counted_for_evict:0
+mem_replication_backlog:0
+mem_total_replication_buffers:0
+mem_clients_slaves:0
+mem_clients_normal:0
+mem_cluster_links:0
+mem_aof_buffer:0
+mem_allocator:jemalloc-5.3.0
+active_defrag_running:0
+lazyfree_pending_objects:0
+lazyfreed_objects:0
+
+# Persistence
+loading:0
+async_loading:0
+current_cow_peak:0
+current_cow_size:0
+current_cow_size_age:0
+current_fork_perc:0.00
+current_save_keys_processed:0
+current_save_keys_total:0
+rdb_changes_since_last_save:0
+rdb_bgsave_in_progress:0
+rdb_last_save_time:1697553186
+rdb_last_bgsave_status:ok
+rdb_last_bgsave_time_sec:-1
+rdb_current_bgsave_time_sec:-1
+rdb_saves:0
+rdb_last_cow_size:0
+rdb_last_load_keys_expired:0
+rdb_last_load_keys_loaded:0
+aof_enabled:0
+aof_rewrite_in_progress:0
+aof_rewrite_scheduled:0
+aof_last_rewrite_time_sec:-1
+aof_current_rewrite_time_sec:-1
+aof_last_bgrewrite_status:ok
+aof_rewrites:0
+aof_rewrites_consecutive_failures:0
+aof_last_write_status:ok
+aof_last_cow_size:0
+module_fork_in_progress:0
+module_fork_last_cow_size:0
+
+# Stats
+total_connections_received:1
+total_commands_processed:7
+instantaneous_ops_per_sec:28
+total_net_input_bytes:33
+total_net_output_bytes:5
+total_net_repl_input_bytes:0
+total_net_repl_output_bytes:0
+instantaneous_input_kbps:0.00
+instantaneous_output_kbps:0.00
+instantaneous_input_repl_kbps:0.00
+instantaneous_output_repl_kbps:0.00
+rejected_connections:0
+sync_full:0
+sync_partial_ok:0
+sync_partial_err:0
+expired_keys:0
+expired_stale_perc:0.00
+expired_time_cap_reached_count:0
+expire_cycle_cpu_milliseconds:0
+evicted_keys:0
+evicted_clients:0
+total_eviction_exceeded_time:0
+current_eviction_exceeded_time:0
+keyspace_hits:0
+keyspace_misses:0
+pubsub_channels:0
+pubsub_patterns:0
+pubsubshard_channels:0
+latest_fork_usec:0
+total_forks:0
+migrate_cached_sockets:0
+slave_expires_tracked_keys:0
+active_defrag_hits:0
+active_defrag_misses:0
+active_defrag_key_hits:0
+active_defrag_key_misses:0
+total_active_defrag_time:0
+current_active_defrag_time:0
+tracking_total_keys:0
+tracking_total_items:0
+tracking_total_prefixes:0
+unexpected_error_replies:0
+total_error_replies:0
+dump_payload_sanitizations:0
+total_reads_processed:1
+total_writes_processed:1
+io_threaded_reads_processed:0
+io_threaded_writes_processed:0
+reply_buffer_shrinks:0
+reply_buffer_expands:0
+acl_access_denied_auth:0
+acl_access_denied_cmd:0
+acl_access_denied_key:0
+acl_access_denied_channel:0
+
+# Replication
+role:master
+connected_slaves:0
+master_failover_state:no-failover
+master_replid:2f47842480f148b9de79946d40f19555b0a39809
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:0
+second_repl_offset:-1
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+
+# CPU
+used_cpu_sys:0.007910
+used_cpu_user:0.007374
+used_cpu_sys_children:0.000000
+used_cpu_user_children:0.000000
+used_cpu_sys_main_thread:0.008293
+used_cpu_user_main_thread:0.005528
+
+# Modules
+module:name=raft,ver=1,api=1,filters=1,usedby=[],using=[],options=[]
+
+# Commandstats
+cmdstat_auth:calls=1,usec=1,usec_per_call=1.00,rejected_calls=0,failed_calls=0
+cmdstat_config|set:calls=1,usec=10,usec_per_call=10.00,rejected_calls=0,failed_calls=0
+cmdstat_config|get:calls=3,usec=5,usec_per_call=1.67,rejected_calls=0,failed_calls=0
+cmdstat_command:calls=2,usec=1422,usec_per_call=711.00,rejected_calls=0,failed_calls=0
+
+# Errorstats
+
+# Latencystats
+latency_percentiles_usec_auth:p50=1.003,p99=1.003,p99.9=1.003
+latency_percentiles_usec_config|set:p50=10.047,p99=10.047,p99.9=10.047
+latency_percentiles_usec_config|get:p50=2.007,p99=2.007,p99.9=2.007
+latency_percentiles_usec_command:p50=700.415,p99=729.087,p99.9=729.087
+
+# Cluster
+cluster_enabled:0
+
+# Keyspace
+
+------ CLIENT LIST OUTPUT ------
+id=8 addr=127.0.0.1:46066 laddr=127.0.0.1:5013 fd=11 name= age=0 idle=0 flags=N db=0 sub=0 psub=0 ssub=0 multi=-1 qbuf=0 qbuf-free=20474 argv-mem=0 multi-mem=0 rbs=16384 rbp=16384 obl=0 oll=0 omem=0 tot-mem=37760 events=r cmd=auth user=default redir=-1 resp=2 lib-name= lib-ver=
+
+------ MODULES INFO OUTPUT ------
+# raft_version
+raft_version:255.255.255
+raft_git_sha1:c259f3d2
+
+# raft_general
+raft_dbid:19098b718e768ad8deda7f85f9c1f0f9
+raft_node_id:3
+raft_state:up
+raft_role:follower
+raft_is_voting:no
+raft_voted_for:-1
+raft_leader_id:-1
+raft_current_term:0
+raft_num_nodes:1
+raft_num_voting_nodes:0
+
+# raft_log
+raft_log_entries:0
+raft_current_index:0
+raft_commit_index:0
+raft_last_applied_index:0
+raft_file_size:99
+raft_cache_memory_size:0
+raft_cache_entries:0
+raft_client_attached_entries:0
+raft_fsync_count:0
+raft_fsync_max_microseconds:0
+raft_fsync_avg_microseconds:0
+
+# raft_snapshot
+raft_snapshot_filename:redis3.rdb
+raft_snapshot_last_idx:0
+raft_snapshot_last_term:0
+raft_snapshot_size:0
+raft_snapshot_time_secs:-1
+raft_snapshots_created:0
+raft_snapshots_received:0
+raft_snapshot_in_progress:no
+raft_snapshot_in_progress_last_idx:-1
+raft_snapshot_in_progress_last_term:-1
+
+# raft_clients
+raft_proxy_reqs:0
+raft_proxy_failed_reqs:0
+raft_proxy_failed_responses:0
+raft_proxy_outstanding_reqs:0
+
+# raft_stats
+raft_appendreq_received:0
+raft_appendreq_with_entry_received:0
+raft_snapshotreq_received:0
+raft_exec_throttled:0
+raft_num_sessions:0
+
+------ CONFIG DEBUG OUTPUT ------
+client-query-buffer-limit 1gb
+sanitize-dump-payload no
+activedefrag no
+list-compress-depth 0
+lazyfree-lazy-user-del no
+slave-read-only yes
+lazyfree-lazy-expire no
+lazyfree-lazy-eviction no
+io-threads-do-reads no
+lazyfree-lazy-server-del no
+io-threads 1
+replica-read-only yes
+proto-max-bulk-len 512mb
+repl-diskless-load disabled
+repl-diskless-sync yes
+lazyfree-lazy-user-flush no
+
+------ FAST MEMORY TEST ------
+3200108:M 17 Oct 2023 16:33:06.935 # Bio worker thread #0 terminated
+3200108:M 17 Oct 2023 16:33:06.935 # Bio worker thread #1 terminated
+3200108:M 17 Oct 2023 16:33:06.935 # Bio worker thread #2 terminated
+*** Preparing to test memory region 55766d848000 (2273280 bytes)
+*** Preparing to test memory region 55766dc59000 (405504 bytes)
+*** Preparing to test memory region 7f8dec000000 (135168 bytes)
+*** Preparing to test memory region 7f8df4000000 (135168 bytes)
+*** Preparing to test memory region 7f8df8000000 (135168 bytes)
+*** Preparing to test memory region 7f8dfc000000 (135168 bytes)
+*** Preparing to test memory region 7f8e02a00000 (4194304 bytes)
+*** Preparing to test memory region 7f8e02ffc000 (8388608 bytes)
+*** Preparing to test memory region 7f8e037fd000 (8388608 bytes)
+*** Preparing to test memory region 7f8e047ff000 (8388608 bytes)
+*** Preparing to test memory region 7f8e05000000 (8388608 bytes)
+*** Preparing to test memory region 7f8e05800000 (6291456 bytes)
+*** Preparing to test memory region 7f8e05ffd000 (8388608 bytes)
+*** Preparing to test memory region 7f8e067fe000 (8388608 bytes)
+*** Preparing to test memory region 7f8e06fff000 (8388608 bytes)
+*** Preparing to test memory region 7f8e07800000 (8388608 bytes)
+*** Preparing to test memory region 7f8e08000000 (135168 bytes)
+*** Preparing to test memory region 7f8e0c181000 (8388608 bytes)
+*** Preparing to test memory region 7f8e0c982000 (8388608 bytes)
+*** Preparing to test memory region 7f8e0d183000 (8388608 bytes)
+*** Preparing to test memory region 7f8e0d984000 (8388608 bytes)
+*** Preparing to test memory region 7f8e0e185000 (8388608 bytes)
+*** Preparing to test memory region 7f8e0e986000 (8388608 bytes)
+*** Preparing to test memory region 7f8e0f186000 (2621440 bytes)
+*** Preparing to test memory region 7f8e0f490000 (8192 bytes)
+*** Preparing to test memory region 7f8e0f4d0000 (4096 bytes)
+*** Preparing to test memory region 7f8e0fafe000 (8192 bytes)
+*** Preparing to test memory region 7f8e0fd51000 (8192 bytes)
+*** Preparing to test memory region 7f8e10600000 (8388608 bytes)
+*** Preparing to test memory region 7f8e10ecf000 (4096 bytes)
+*** Preparing to test memory region 7f8e10f8a000 (45056 bytes)
+*** Preparing to test memory region 7f8e11165000 (16384 bytes)
+*** Preparing to test memory region 7f8e11187000 (16384 bytes)
+*** Preparing to test memory region 7f8e112d5000 (8192 bytes)
+*** Preparing to test memory region 7f8e112d8000 (8192 bytes)
+*** Preparing to test memory region 7f8e112f6000 (4096 bytes)
+*** Preparing to test memory region 7f8e11337000 (4096 bytes)
+*** Preparing to test memory region 7f8e1133a000 (4096 bytes)
+.O.O.O.O.3200108:M 17 Oct 2023 16:33:06.944 # Redis 255.255.255 crashed by signal: 11, si_code: 1
+3200108:M 17 Oct 2023 16:33:06.944 # Accessing address: 0x7f8e02e00000
+3200108:M 17 Oct 2023 16:33:06.944 # Crashed running the instruction at: 0x7f8e11038c43
+
+------ STACK TRACE ------
+EIP:
+/lib/x86_64-linux-gnu/libc.so.6(+0xa3c43)[0x7f8e11038c43]
+
+Backtrace:
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x13140)[0x7f8e1117c140]
+/lib/x86_64-linux-gnu/libc.so.6(+0xa3c43)[0x7f8e11038c43]
+O./home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(je_calloc+0xf4)[0x55766d6efb34]
+/home/snagendra/Fuzzing/redis/src/redis-server 0.0.0.0:5013(RM_Calloc+0x33)[0x55766d654473]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(deserializeAEReq+0x140)[0x7f8e10f3b990]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(handleTestNetworkMessage+0x146)[0x7f8e10f3c4d6]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(poll_redis_test_messages+0x89)[0x7f8e10f3c659]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x7ea7)[0x7f8e11170ea7]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x3f)[0x7f8e11090a2f]
+
+------ REGISTERS ------
+3200108:M 17 Oct 2023 16:33:06.945 # 
+RAX:0000000000000000 RBX:0000000000000006
+RCX:000055766d671c70 RDX:00007f8e02a01000
+RDI:00007f8e02e00000 RSI:0000000000000000
+RBP:00007f8e037fac60 RSP:00007f8e037fa268
+R8 :00007f8e02a01000 R9 :0000000000000000
+R10:0000000000000064 R11:0000000000000038
+R12:00007f8e037facf0 R13:0000000000000006
+R14:000055766da70c40 R15:00007f8e02a01000
+RIP:00007f8e11038c43 EFL:0000000000010202
+CSGSFS:002b000000000033
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa277) -> 0000000000000038
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa276) -> 0000000000000001
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa275) -> 00007f8e037fa314
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa274) -> 00007f8e112fcd73
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa273) -> 00007f8e037fa2f0
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa272) -> 00007f8dec004fa8
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa271) -> 00007f8e037fa2c0
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa270) -> 00007f8dec001a60
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa26f) -> 00007f8e10f6cb01
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa26e) -> 00007f8e037fa318
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa26d) -> 00007f8e10f8bf00
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa26c) -> 0000000000000038
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa26b) -> 00007f8e037fb060
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa26a) -> 0000000000000038
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa269) -> 00007f8e10f6cb8e
+3200108:M 17 Oct 2023 16:33:06.945 # (00007f8e037fa268) -> 000055766d6efb34
+
+------ INFO OUTPUT ------
+O.O.
+----- Stderr -----
+redis-server: /home/snagendra/Fuzzing/redisraft-fuzzing/deps/raft/src/raft_server.c:1702: raft_get_first_entry_idx: Assertion `0 < raft_get_current_idx(me)' failed.
+
+
+

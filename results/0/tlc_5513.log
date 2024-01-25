@@ -1,0 +1,160 @@
+logs for node: 1
+
+----- Stdout -----
+3598379:C 17 Oct 2023 18:16:15.266 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+3598379:C 17 Oct 2023 18:16:15.266 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+3598379:C 17 Oct 2023 18:16:15.266 * Redis version=255.255.255, bits=64, commit=e04ebdb8, modified=1, pid=3598379, just started
+3598379:C 17 Oct 2023 18:16:15.266 * Configuration loaded
+3598379:M 17 Oct 2023 18:16:15.267 * monotonic clock: POSIX clock_gettime
+3598379:M 17 Oct 2023 18:16:15.267 * Running mode=standalone, port=5011.
+3598379:M 17 Oct 2023 18:16:15.272 * <raft> RedisRaft version 255.255.255 [c259f3d2]
+3598379:M 17 Oct 2023 18:16:15.276 * <raft> Initializing test network
+3598379:M 17 Oct 2023 18:16:15.277 * <raft> Created test network client
+3598379:M 17 Oct 2023 18:16:15.282 * <raft> Raft module loaded, state is 'loading'
+3598379:M 17 Oct 2023 18:16:15.282 * Module 'raft' loaded from /home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so
+3598379:M 17 Oct 2023 18:16:15.283 * Server initialized
+3598379:M 17 Oct 2023 18:16:15.283 . The AOF directory appendonlydir doesn't exist
+3598379:M 17 Oct 2023 18:16:15.283 * Ready to accept connections tcp
+3598379:M 17 Oct 2023 18:16:15.283 . 0 clients connected (0 replicas), 1746720 bytes in use
+3598379:M 17 Oct 2023 18:16:15.370 - Accepted 127.0.0.1:39244
+3598379:M 17 Oct 2023 18:16:15.370 # Missing implement of connection type tls
+3598379:M 17 Oct 2023 18:16:15.383 * <raft> Loading: Redis loading complete, snapshot NOT LOADED
+3598379:M 17 Oct 2023 18:16:15.383 * <raft> Cluster Membership: term:0 index:0 nodes: id=1,voting=0,active=1,addr=-
+3598379:M 17 Oct 2023 18:16:15.384 * <raft> Test network starting message polling thread
+3598379:M 17 Oct 2023 18:16:15.384 * <raft> Cluster Membership: term:0 index:6 nodes: id=1,voting=1,active=1,addr=- id=2,voting=0,active=1,addr=:0
+3598379:M 17 Oct 2023 18:16:15.385 * <raft> Cluster Membership: term:0 index:6 nodes: id=1,voting=1,active=1,addr=- id=2,voting=0,active=1,addr=:0 id=3,voting=0,active=1,addr=localhost:5013
+3598379:M 17 Oct 2023 18:16:15.385 * <raft> Raft state after loading log: log_count=6, first_idx=1, current_idx=6, last_applied_idx=0
+3598379:M 17 Oct 2023 18:16:15.385 . <raft> Raft term=1, vote=-1
+
+
+=== REDIS BUG REPORT START: Cut & paste starting from here ===
+3598379:M 17 Oct 2023 18:16:15.386 # Redis 255.255.255 crashed by signal: 11, si_code: 1
+3598379:M 17 Oct 2023 18:16:15.386 # Accessing address: 0x7f86c7c00000
+3598379:M 17 Oct 2023 18:16:15.386 # Crashed running the instruction at: 0x7f86c7e05ad6
+
+------ STACK TRACE ------
+EIP:
+/lib/x86_64-linux-gnu/libc.so.6(+0xa3ad6)[0x7f86c7e05ad6]
+
+Backtrace:
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x13140)[0x7f86c7f49140]
+/lib/x86_64-linux-gnu/libc.so.6(+0xa3ad6)[0x7f86c7e05ad6]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(FileFlush+0x61)[0x7f86c7cf8a61]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(FileSetReadOffset+0xf)[0x7f86c7cf8c4f]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(+0x25e1a)[0x7f86c7cf9e1a]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(LogGet+0x47)[0x7f86c7cfb1f7]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(+0x27347)[0x7f86c7cfb347]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raft_get_entry_from_idx+0x1a)[0x7f86c7d0f54a]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raft_get_last_log_term+0x36)[0x7f86c7d15576]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(raft_recv_requestvote+0x25b)[0x7f86c7d1029b]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(handleTestNetworkMessage+0x204)[0x7f86c7d09594]
+/home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so(poll_redis_test_messages+0x89)[0x7f86c7d09659]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x7ea7)[0x7f86c7f3dea7]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x3f)[0x7f86c7e5da2f]
+
+------ REGISTERS ------
+3598379:M 17 Oct 2023 18:16:15.386 # 
+RAX:00007f86c7955788 RBX:00007f86c7955758
+RCX:00007f86c7955748 RDX:ffffffffffd55788
+RDI:00007f86c7bfffd0 RSI:00007f86c7c00000
+RBP:00007f86c79557b8 RSP:00007f86bb7fd258
+R8 :fffffffffffffff8 R9 :0000000000000002
+R10:00007f86c7955758 R11:00007f86c7955788
+R12:00007f86c7955788 R13:00007f86c7955758
+R14:0000000000000000 R15:0000000000000001
+RIP:00007f86c7e05ad6 EFL:0000000000010286
+CSGSFS:002b000000000033
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd267) -> 0000000000000006
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd266) -> 00007f86c7d59010
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd265) -> 00007f86bb7fd310
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd264) -> 88487e8cdd97a300
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd263) -> 00007f86b4001a10
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd262) -> 00007f86c7cf9e1a
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd261) -> 00007f86c79526c0
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd260) -> 00007f86c7955758
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd25f) -> 00007f86c79526c0
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd25e) -> 00007f86c7cf8c4f
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd25d) -> 0000000000000006
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd25c) -> 00007f86c79526c0
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd25b) -> 0000000000000028
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd25a) -> 00007f86c7955758
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd259) -> 00007f86bb7fd2a0
+3598379:M 17 Oct 2023 18:16:15.386 # (00007f86bb7fd258) -> 00007f86c7cf8a61
+
+------ INFO OUTPUT ------
+3598379:M 17 Oct 2023 18:16:15.392 * <raft> State change: Node is now a leader, term 2
+3598379:M 17 Oct 2023 18:16:15.392 * <raft> Cluster Membership: term:2 index:7 nodes: id=1,voting=1,active=1,addr=- id=2,voting=0,active=1,addr=:0 id=3,voting=0,active=1,addr=localhost:5013
+
+----- Stderr -----
+
+
+
+
+logs for node: 2
+
+----- Stdout -----
+3598637:C 17 Oct 2023 18:16:15.539 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+3598637:C 17 Oct 2023 18:16:15.539 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+3598637:C 17 Oct 2023 18:16:15.539 * Redis version=255.255.255, bits=64, commit=e04ebdb8, modified=1, pid=3598637, just started
+3598637:C 17 Oct 2023 18:16:15.539 * Configuration loaded
+3598637:M 17 Oct 2023 18:16:15.539 * monotonic clock: POSIX clock_gettime
+3598637:M 17 Oct 2023 18:16:15.540 * Running mode=standalone, port=5012.
+3598637:M 17 Oct 2023 18:16:15.544 * <raft> RedisRaft version 255.255.255 [c259f3d2]
+3598637:M 17 Oct 2023 18:16:15.548 * <raft> Initializing test network
+3598637:M 17 Oct 2023 18:16:15.549 * <raft> Created test network client
+3598637:M 17 Oct 2023 18:16:15.553 * <raft> Raft module loaded, state is 'loading'
+3598637:M 17 Oct 2023 18:16:15.553 * Module 'raft' loaded from /home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so
+3598637:M 17 Oct 2023 18:16:15.553 * Server initialized
+3598637:M 17 Oct 2023 18:16:15.553 . The AOF directory appendonlydir doesn't exist
+3598637:M 17 Oct 2023 18:16:15.553 * Ready to accept connections tcp
+3598637:M 17 Oct 2023 18:16:15.553 . 0 clients connected (0 replicas), 1746624 bytes in use
+3598637:M 17 Oct 2023 18:16:15.653 * <raft> Loading: Redis loading complete, snapshot NOT LOADED
+3598637:M 17 Oct 2023 18:16:15.654 * <raft> Cluster Membership: term:0 index:0 nodes: id=2,voting=0,active=1,addr=-
+3598637:M 17 Oct 2023 18:16:15.654 * <raft> Test network starting message polling thread
+3598637:M 17 Oct 2023 18:16:15.655 * <raft> Cluster Membership: term:0 index:6 nodes: id=2,voting=0,active=1,addr=- id=1,voting=1,active=1,addr=localhost:5011
+3598637:M 17 Oct 2023 18:16:15.655 * <raft> Cluster Membership: term:0 index:6 nodes: id=2,voting=0,active=1,addr=- id=1,voting=1,active=1,addr=localhost:5011 id=3,voting=0,active=1,addr=localhost:5013
+3598637:M 17 Oct 2023 18:16:15.655 * <raft> Raft state after loading log: log_count=6, first_idx=1, current_idx=6, last_applied_idx=0
+3598637:M 17 Oct 2023 18:16:15.655 . <raft> Raft term=1, vote=-1
+3598637:M 17 Oct 2023 18:16:15.777 - Accepted 127.0.0.1:51336
+3598637:M 17 Oct 2023 18:16:15.777 # Missing implement of connection type tls
+3598637:M 17 Oct 2023 18:16:15.956 * <raft> State change: Election starting, node is now a pre-candidate, term 1
+3598637:M 17 Oct 2023 18:16:15.956 * <raft> Cluster Membership: term:1 index:6 nodes: id=2,voting=0,active=1,addr=- id=1,voting=1,active=1,addr=localhost:5011 id=3,voting=0,active=1,addr=localhost:5013
+
+----- Stderr -----
+
+
+
+
+logs for node: 3
+
+----- Stdout -----
+3598755:C 17 Oct 2023 18:16:15.661 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+3598755:C 17 Oct 2023 18:16:15.662 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+3598755:C 17 Oct 2023 18:16:15.662 * Redis version=255.255.255, bits=64, commit=e04ebdb8, modified=1, pid=3598755, just started
+3598755:C 17 Oct 2023 18:16:15.662 * Configuration loaded
+3598755:M 17 Oct 2023 18:16:15.662 * monotonic clock: POSIX clock_gettime
+3598755:M 17 Oct 2023 18:16:15.662 * Running mode=standalone, port=5013.
+3598755:M 17 Oct 2023 18:16:15.666 * <raft> RedisRaft version 255.255.255 [c259f3d2]
+3598755:M 17 Oct 2023 18:16:15.671 * <raft> Initializing test network
+3598755:M 17 Oct 2023 18:16:15.671 * <raft> Created test network client
+3598755:M 17 Oct 2023 18:16:15.675 * <raft> Raft module loaded, state is 'loading'
+3598755:M 17 Oct 2023 18:16:15.675 * Module 'raft' loaded from /home/snagendra/Fuzzing/redisraft-fuzzing/redisraft.so
+3598755:M 17 Oct 2023 18:16:15.676 * Server initialized
+3598755:M 17 Oct 2023 18:16:15.676 . The AOF directory appendonlydir doesn't exist
+3598755:M 17 Oct 2023 18:16:15.676 * Ready to accept connections tcp
+3598755:M 17 Oct 2023 18:16:15.676 . 0 clients connected (0 replicas), 1746720 bytes in use
+3598755:M 17 Oct 2023 18:16:15.756 - Accepted 127.0.0.1:47278
+3598755:M 17 Oct 2023 18:16:15.756 # Missing implement of connection type tls
+3598755:M 17 Oct 2023 18:16:15.775 * <raft> Loading: Redis loading complete, snapshot NOT LOADED
+3598755:M 17 Oct 2023 18:16:15.776 * <raft> Cluster Membership: term:0 index:0 nodes: id=3,voting=0,active=1,addr=-
+3598755:M 17 Oct 2023 18:16:15.776 * <raft> Test network starting message polling thread
+3598755:M 17 Oct 2023 18:16:15.777 * <raft> Cluster Membership: term:0 index:6 nodes: id=3,voting=0,active=1,addr=- id=1,voting=1,active=1,addr=localhost:5011
+3598755:M 17 Oct 2023 18:16:15.777 * <raft> Cluster Membership: term:0 index:6 nodes: id=3,voting=0,active=1,addr=- id=1,voting=1,active=1,addr=localhost:5011 id=2,voting=0,active=1,addr=localhost:5012
+3598755:M 17 Oct 2023 18:16:15.777 * <raft> Raft state after loading log: log_count=6, first_idx=1, current_idx=6, last_applied_idx=0
+3598755:M 17 Oct 2023 18:16:15.777 . <raft> Raft term=1, vote=-1
+3598755:M 17 Oct 2023 18:16:16.088 - Client closed connection id=8 addr=127.0.0.1:47278 laddr=127.0.0.1:5013 fd=11 name= age=1 idle=1 flags=N db=0 sub=0 psub=0 ssub=0 multi=-1 qbuf=0 qbuf-free=20474 argv-mem=0 multi-mem=0 rbs=1024 rbp=0 obl=0 oll=0 omem=0 tot-mem=22400 events=r cmd=auth user=default redir=-1 resp=2 lib-name= lib-ver=
+
+----- Stderr -----
+
+
+
